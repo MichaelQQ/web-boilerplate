@@ -8,6 +8,7 @@ var stream = require('webpack-stream');
 var browserSync = require('browser-sync').create();
 var RevAll = require('gulp-rev-all');
 var imagemin = require('gulp-imagemin');
+var clean = require('gulp-clean');
 
 var path = {
     SRC_HTML: process.env.INIT_CWD + '/src/**/*.html',
@@ -63,6 +64,12 @@ gulp.task('serve', ['js', 'html', 'images'], function() {
     gulp.watch(path.SRC_HTML, ['html-watch']);
 });
 
+gulp.task('clean-cdn', function () {
+    return gulp.src(path.CDN, {read: false})
+		.pipe(clean());
+});
+
+// add version to file names and copy to cdn/
 gulp.task('cdn', ['js', 'html', 'images'], function () {
     var revAll = new RevAll();
     gulp.src(path.DEST_ALL)
