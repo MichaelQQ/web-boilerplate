@@ -5,7 +5,7 @@ module.exports = {
     debug: true,
     devtool: 'eval',
     output: {
-        path: path.join(__dirname, "build"),
+        // path: path.join(__dirname, "build"),
         filename: '[name].min.js'
     },
     module: {

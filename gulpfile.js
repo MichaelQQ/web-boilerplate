@@ -10,27 +10,32 @@ var RevAll = require('gulp-rev-all');
 var imagemin = require('gulp-imagemin');
 
 var path = {
-    ALL_HTML: 'src/**/*.html',
-    ALL_MAIN_JS: 'src/js/*.js',
-    DEST_JS: 'dist/js',
-    DEST: 'dist'
+    SRC_HTML: process.env.INIT_CWD + '/src/**/*.html',
+    SRC_MAIN_JS: process.env.INIT_CWD + '/src/js/*.js',
+    SRC_ALL_JS: process.env.INIT_CWD + '/src/**/*.js',
+    SRC_IMAGES: process.env.INIT_CWD + '/src/images/*',
+    DEST_ALL: process.env.INIT_CWD + '/dist/*',
+    DEST_HTML: process.env.INIT_CWD + '/dist',
+    DEST_JS: process.env.INIT_CWD + '/dist/js',
+    DEST_IMAGES: process.env.INIT_CWD + '/dist/images',
+    CDN: process.env.INIT_CWD + '/cdn'
 };
 
 gulp.task('html', [], function () {
-    return gulp.src(path.ALL_HTML)
-        .pipe(gulp.dest(path.DEST));
+    return gulp.src(path.SRC_HTML)
+        .pipe(gulp.dest(path.DEST_HTML));
 });
 
 gulp.task('images', [], function () {
-    return gulp.src('src/images/**.*')
+    return gulp.src(path.SRC_IMAGES)
            .pipe(imagemin({
                 progressive: true
            }))
-           .pipe(gulp.dest('dist/images/'))
+           .pipe(gulp.dest(path.DEST_IMAGES));
 });
 
 gulp.task('js', [], function() {
-    return gulp.src([path.ALL_MAIN_JS]) // gulp looks for all source files under specified path
+    return gulp.src([path.SRC_MAIN_JS]) // gulp looks for all source files under specified path
         .pipe(sourcemaps.init()) // creates a source map which would be very helpful for debugging by maintaining the actual source code structure
         .pipe(named())
         .pipe(stream(webpackConfig)) // blend in the webpack config into the source files
@@ -51,18 +56,18 @@ gulp.task('html-watch', ['html'], function () {
 gulp.task('serve', ['js', 'html', 'images'], function() {
 
     browserSync.init({
-        server: path.DEST
+        server: path.DEST_HTML
     });
 
-    gulp.watch("src/**/*.js", ['js-watch']);
-    gulp.watch("src/*.html", ['html-watch']);
+    gulp.watch(path.SRC_ALL_JS, ['js-watch']);
+    gulp.watch(path.SRC_HTML, ['html-watch']);
 });
 
 gulp.task('cdn', ['js', 'html', 'images'], function () {
     var revAll = new RevAll();
-    gulp.src('dist/**')
+    gulp.src(path.DEST_ALL)
         .pipe(revAll.revision())
-        .pipe(gulp.dest('cdn'));
+        .pipe(gulp.dest(path.CDN));
 });
 
 gulp.task('default', ['serve']);
