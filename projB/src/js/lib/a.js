@@ -1,14 +1,19 @@
 function setGreen() {
-    document.body.style.color = "green";
+  document.body.style.color = 'green';
+}
+
+function setRed() {
+  document.body.style.color = 'red';
 }
 
 function setBigFont() {
-    document.body.style.fontSize = "3em";
+  document.body.style.fontSize = '3em';
 }
 
 var api = {
-    setGreen: setGreen,
-    setBigFont: setBigFont
+  setGreen: setGreen,
+  setRed: setRed,
+  setBigFont: setBigFont,
 };
 
 module.exports = api;
